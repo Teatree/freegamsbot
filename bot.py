@@ -11,7 +11,7 @@ url = "x"
 
 combinedTextUrl = ""
 
-api = EpicGamesStoreAPI()
+api = EpicGamesStoreAPI() 
 free_games = api.get_free_games()['data']['Catalog']['searchStore']['elements']
 for game in free_games:
     game_name = game['title']
