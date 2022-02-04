@@ -5,6 +5,8 @@ from discord.ext import commands
 from datetime import datetime, time, timedelta
 import asyncio
 
+f = open('creds.txt','r')
+creds = f.read()
 
 epicText = "**EPIC FREE GAMES:** \n" 
 url = "x"
@@ -56,7 +58,7 @@ for game in free_games:
         pass
 
 
-TOKEN = "OTM5MTEzOTQ0ODY4NTg1NTMy.Yf0IBA.DSJCCM3-6B_slBM9ssH7Pa8epC4"
+TOKEN = str(creds)
 
 from discord.ext import commands, tasks
 
