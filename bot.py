@@ -4,6 +4,7 @@ from epicstore_api import EpicGamesStoreAPI, OfferData
 from discord.ext import commands
 from datetime import datetime, time, timedelta
 import asyncio
+import requests
 
 f = open('creds.txt','r')
 creds = f.read()
@@ -47,15 +48,40 @@ for game in free_games:
             print('{} ({}) is FREE now.'.format(
                 game_name, game_price
             ))
-            epicText = epicText + '{} ({}) is FREE now.'.format(
+            epicText = epicText +"\n"+ '{} ({}) is FREE now.'.format(
                 game_name, game_price
             )
-            url = "https://www.epicgames.com/store/en-US/p/" + game['urlSlug']
+            url = "https://www.epicgames.com/store/en-US/p/" + game['urlSlug'] +"\n"
             print(url)
             
-            combinedTextUrl = combinedTextUrl+epicText+"\n"+url
+            combinedTextUrl = combinedTextUrl+"\n"+epicText+"\n"+url
     except TypeError:
         pass
+
+
+# -- Steam Free Weekend search
+
+r = requests.get('https://store.steampowered.com/api/featuredcategories/?l=english', auth=('user', 'pass'))
+json_obj = r.json()
+
+for i in range(100):
+	if i == 0:
+		combinedTextSteam = "\n **STEAM**: \n"
+	if str(i) in json_obj:
+		#print(json_obj[str(i)]['items'][0]['name'])
+		if json_obj[str(i)]['items'][0]['name'] == "Free Weekend" or json_obj[str(i)]['items'][0]['name'] == "Free Weekend ownership":
+			su = json_obj[str(i)]['items'][0]['url']
+			steamUrl = su.replace("\/", "/")
+			
+			combinedTextSteam = combinedTextSteam + "\n"+ json_obj[str(i)]['items'][0]['name'] + "\n"
+			combinedTextSteam = combinedTextSteam + steamUrl + "\n"
+			combinedTextSteam = combinedTextSteam + json_obj[str(i)]['items'][0]['body'] + "\n"
+	if i == 100 and combinedTextSteam == "\n **STEAM**: \n":
+		combinedTextSteam = ""
+	else:
+		continue
+
+# --
 
 
 TOKEN = str(creds)
@@ -66,6 +92,8 @@ bot = commands.Bot("!")
 
 target_channel_idXOX = 939170953290719322
 target_channel_idMIN = 936999636625940540
+
+combinedTextUrl = combinedTextUrl + combinedTextSteam
 
 @tasks.loop(hours=168)
 async def called_once_a_dayXOX():
