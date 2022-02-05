@@ -1,0 +1,7 @@
+remember
+
+py -3.10 bot.py to launch
+
+creds are a file, don't remove it
+
+git token is in slack
