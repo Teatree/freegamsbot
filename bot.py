@@ -1,11 +1,7 @@
 import discord
-from discord.ext import commands
+import os
+from discord.ext import commands, tasks
 from datetime import datetime, time, timedelta
-import asyncio
-import requests
-
-f = open('creds.txt','r')
-creds = f.read()
 
  # look at grabfreegames.com and grab games
 from urllib.request import urlopen
@@ -39,39 +35,27 @@ def getTitles(result):
 
 
 # discord creds
-TOKEN = str(creds)
-
-from discord.ext import commands, tasks
-
-bot = commands.Bot("!")
+TOKEN = os.environ['DISCORD_TOKEN']
 
 target_channel_idXOX = 939170953290719322
 target_channel_idMIN = 936999636625940540
 ##############
 
+bot = commands.Bot("!")
 
-@tasks.loop(hours=168)
-async def called_once_a_dayXOX():
-    message_channel = bot.get_channel(target_channel_idXOX)
-    print(f"Got channel {message_channel}")
-    await message_channel.send(getTitles("xox"))
+@tasks.loop(count=1)
+async def do_its_thing():
+        await bot.wait_until_ready()
 
-@tasks.loop(hours=168)
-async def called_once_a_dayMIN():
-    message_channel = bot.get_channel(target_channel_idMIN)
-    print(f"Got channel {message_channel}")
-    await message_channel.send(getTitles("min"))
+        message_channel = bot.get_channel(target_channel_idXOX)
+        await message_channel.send(getTitles("xox"))
 
-@called_once_a_dayXOX.before_loop
-async def before():
-    await bot.wait_until_ready()
-    print("Finished waiting")
+        message_channel = bot.get_channel(target_channel_idMIN)
+        await message_channel.send(getTitles("min"))
 
-@called_once_a_dayMIN.before_loop
-async def before():
-    await bot.wait_until_ready()
-    print("Finished waiting")
+        await bot.close()
 
-called_once_a_dayXOX.start()
-called_once_a_dayMIN.start()
-bot.run(TOKEN)
+
+if __name__ == '__main__':
+    do_its_thing.start()
+    bot.run(TOKEN)
