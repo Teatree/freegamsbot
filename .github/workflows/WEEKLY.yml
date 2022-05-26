@@ -1,0 +1,24 @@
+name: Weekly Gams
+
+on:
+  push:
+    tags:
+      - trigger.**
+  schedule:
+    - cron: '55 14 * * *'
+
+jobs:
+  grab_gams:
+    name: Grab free gams
+    runs-on: ubuntu-latest
+    steps:
+        - uses: actions/checkout@v3
+        - uses: actions/setup-python@v3
+          with:
+            python-version: '3.10'
+            cache: 'pip'
+        - name: Install dependencies
+          run: pip install -r requirements.txt
+        - run: python bot.py
+          env:
+            DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
