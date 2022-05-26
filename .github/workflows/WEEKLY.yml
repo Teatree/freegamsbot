@@ -5,7 +5,7 @@ on:
     tags:
       - trigger.**
   schedule:
-    - cron: '01 09 * * 5'
+    - cron: '16 18 * * *'
 
 jobs:
   grab_gams:
