@@ -41,7 +41,7 @@ target_channel_idXOX = 939170953290719322
 target_channel_idMIN = 936999636625940540
 ##############
 
-bot = commands.Bot("!")
+bot = commands.Bot(intents=discord.Intents.default())
 
 @tasks.loop(count=1)
 async def do_its_thing():
