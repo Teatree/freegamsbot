@@ -5,8 +5,8 @@ on:
     tags:
       - trigger.**
   schedule:
-    - cron: '30 05 * * 5'
-
+    - cron: '0 8 * * *'
+    
 jobs:
   grab_gams:
     name: Grab free gams
