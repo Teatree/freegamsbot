@@ -1,6 +1,7 @@
 name: Weekly Gams
 
 on:
+  workflow_dispatch:  # 👈 ADD THIS
   push:
     tags:
       - trigger.**
